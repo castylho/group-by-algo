@@ -1,23 +1,17 @@
 import { ExpandLess, ExpandMore } from "@mui/icons-material";
-import {
-  Collapse,
-  List,
-  ListItemButton,
-  ListItemText,
-  ListSubheader,
-  Typography,
-} from "@mui/material";
-import React, { useEffect, useState } from "react";
+import Collapse from "@mui/material/Collapse";
+import Divider from "@mui/material/Divider";
+import List from "@mui/material/List";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemText from "@mui/material/ListItemText";
+import Typography from "@mui/material/Typography";
+import React, { useCallback, useEffect, useState } from "react";
+import ListHeader from "./components/ListHeader";
+import Post from "./components/Post";
 import { APIRes, PostByUser, State } from "./types";
 import { formatData } from "./utils";
 
 const URL = "https://jsonplaceholder.typicode.com/posts";
-
-const ListHeader = (
-  <ListSubheader component="div" id="nested-list-subheader">
-    <Typography>Posts by UserId</Typography>
-  </ListSubheader>
-);
 
 function App() {
   const [state, setState] = useState<State>({
@@ -25,35 +19,26 @@ function App() {
     selectedUser: "",
   });
 
-  const fetchPosts = async () => {
+  const fetchPosts = useCallback(async () => {
     const data = await fetch(URL);
     const jsonData: APIRes[] = await data.json();
     setState({ ...state, postsByUser: formatData(jsonData) });
-  };
+  }, [state, setState]);
 
   useEffect(() => {
     fetchPosts();
-  }, []);
-
-  const renderPost = (title: string, body: string) => {
-    return (
-      <>
-        <Typography variant="h5">{title}</Typography>
-        <Typography paragraph>{body}</Typography>
-      </>
-    );
-  };
+  }, [fetchPosts]);
 
   const renderPostList = (userId: string, obj: PostByUser) => {
-    // if (!obj.hasOwnProperty(userId)) {
-    //   return null;
-    // }
-
-    return obj[userId].map((post) => (
-      <List sx={{ ml: 4 }} key={`${post.userId}-${post.id}-${post.title}`}>
-        {renderPost(post.title, post.body)}
-      </List>
-    ));
+    return obj[userId].map((post, index) => {
+      const isLast = index === obj[userId].length - 1;
+      return (
+        <List sx={{ mx: 2 }} key={`${post.userId}-${post.id}-${post.title}`}>
+          <Post title={post.title} body={post.body} />
+          {!isLast ? <Divider /> : null}
+        </List>
+      );
+    });
   };
 
   const handleListItemClick = (ev: React.MouseEvent, userId: string) => {
@@ -67,7 +52,7 @@ function App() {
     <>
       <Typography variant="h1">Fetch data from JSON Placeholder API</Typography>
       <List
-        sx={{ width: "100%", maxWidth: 900, bgcolor: "background.paper" }}
+        sx={{ width: "100%", bgcolor: "background.paper" }}
         component="nav"
         aria-labelledby="nested-list-subheader"
         subheader={ListHeader}
@@ -76,17 +61,19 @@ function App() {
           const isSelected = state.selectedUser === userId;
 
           return (
-            <ListItemButton
-              key={`${index}.${userId}`}
-              onClick={(event) => handleListItemClick(event, userId)}
-              selected={isSelected}
-            >
-              <ListItemText primary={`UserId ${userId}`} />
-              {isSelected ? <ExpandLess /> : <ExpandMore />}
+            <>
+              <ListItemButton
+                key={`${index}.${userId}`}
+                onClick={(ev) => handleListItemClick(ev, userId)}
+                selected={isSelected}
+              >
+                <ListItemText primary={`UserId ${userId}`} />
+                {isSelected ? <ExpandLess /> : <ExpandMore />}
+              </ListItemButton>
               <Collapse in={isSelected} timeout="auto" unmountOnExit>
                 {renderPostList(userId, state.postsByUser)}
               </Collapse>
-            </ListItemButton>
+            </>
           );
         })}
       </List>

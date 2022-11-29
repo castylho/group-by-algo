@@ -6,7 +6,7 @@ export type APIRes = {
 };
 
 export type Post = {
-  postId: number;
+  postId?: number;
   title: string;
   body: string;
 };
