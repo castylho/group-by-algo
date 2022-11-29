@@ -22,4 +22,5 @@ export type PostByUser = {
 
 export type State = {
   postsByUser: PostByUser | {};
+  selectedUser: string;
 };
