@@ -1,6 +1,6 @@
 # Why this exist?
 
-The idea behind this project was a failed technical interview where I didn't come up with group by userId algorhitm(?P) found in **/src/utils.ts**
+The idea behind this project was a failed technical interview where I didn't come up with group by userId algorithm found in **/src/utils.ts**
 So I went back to the problem, solved it and added a few styling with Material UI
 
 # Getting started
