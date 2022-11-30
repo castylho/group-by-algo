@@ -6,6 +6,7 @@ So I went back to the problem, solved it and added a few styling with Material U
 # Getting started
 
 The project was created using the template CRA for typescript ###`npx create-react-app <folder-name> --template typescript`
+I'm getting data from [JSON Placeholder API](https://jsonplaceholder.typicode.com/)
 
 ## Available Scripts
 
@@ -16,4 +17,4 @@ In the project directory, you can run:
 Runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-The page will reload if you make edits.\
+The page will reload if you make edits.
